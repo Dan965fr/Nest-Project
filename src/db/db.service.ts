@@ -16,7 +16,7 @@ export class DbService implements OnModuleInit, OnModuleDestroy {
         acquire: 30000,
         idle: 10000,
       },
-      logging: true, // כדי שלא יציף לוגים
+      logging: false, // כדי שלא יציף לוגים
     });
   }
 

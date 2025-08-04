@@ -1,28 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/models/user.model'; // זה המודל של Sequelize
 import { Role } from 'src/common/enum/role.enum';
-import { User } from 'src/users/user.interface';
-
 
 @Injectable()
 export class UsersService {
-    private users : User[] =  []
-    private idCounter = 1;
-       
+  async findUserByName(username: string): Promise<User | null> {
+    return await User.findOne({ where: {  username } });
+  }
 
-    findUserByName(username:string) : User | undefined{
-        return this.users.find(user => user.username === username);
+  async createUser(user: { username: string; email: string; password: string; role: string }): Promise<User> {
+    const role = user.role === Role.Commander ? Role.Commander : Role.Soldier;
+    return await User.create({
+      username: user.username,
+      email: user.email,
+      password: user.password,
+      role,
+    });
+  }
 
-    }
-
-
-    createUser(user:{username: string; password: string; role: string}) : User {
-        const role = user.role === Role.Commander ? Role.Commander : Role.Soldier;
-        const newUser : User = {id: this.idCounter++, username: user.username, password: user.password,role};
-        this.users.push(newUser);
-        return newUser;
-    }
-    
-    getAllUsers() : User[] {
-        return this.users;
-    }
+  async getAllUsers(): Promise<User[]> {
+    return await User.findAll();
+  }
 }
+

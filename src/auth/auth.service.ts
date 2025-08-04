@@ -15,11 +15,12 @@ export class AuthService {
     ){}
 
     async register(registerDto: RegisterDto){
-        const {username,password,role} = registerDto;
+        const {username,email,password,role} = registerDto;
 
         const hashedPassword = await bcrypt.hash(password,10);
         const user = await this.userService.createUser({
-            username,
+            username:username,
+            email,
             password: hashedPassword,
             role: role || Role.Soldier,
         });
